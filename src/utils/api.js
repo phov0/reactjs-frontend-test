@@ -1,6 +1,5 @@
 import { mock } from "./mock";
-
-const axios = require("axios");
+import axios from "axios";
 
 const instance = axios.create({
   timeout: 120000,

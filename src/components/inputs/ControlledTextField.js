@@ -1,35 +1,59 @@
 import React from "react";
-import { TextField as MTextField } from "@material-ui/core";
-
 import { Controller } from "react-hook-form";
+import { TextField } from "@mui/material";
+import { getValueFromObject } from "../../utils/basic";
 
 const ControlledTextField = ({
   formProps,
   name,
+  validationKey,
+  ignoreError = false,
   ...otherProps
 }) => {
-  const { control, errors, rules, initialValues } = formProps;
-  const isError = errors[name] !== undefined;
+  const {
+    control,
+    formState: { errors },
+    rules,
+  } = formProps;
+
+  const isError =
+    (getValueFromObject(errors, name) !== undefined && !ignoreError) ||
+    otherProps.error;
 
   return (
     <Controller
       name={name}
       control={control}
-      rules={rules[name]}
-      defaultValue={initialValues[name]}
-      render={({ onChange, onBlur, value }) => (
-        <MTextField
+      disabled={otherProps.disabled}
+      rules={
+        otherProps.disabled
+          ? { a: () => true }
+          : getValueFromObject(rules, validationKey ?? name)
+      }
+      render={({ field: { onChange, onBlur, value } }) => (
+        <TextField
           {...otherProps}
           value={value}
           error={isError}
-          helperText={errors[name]?.message}
+          helperText={
+            !isError
+              ? otherProps.helperText
+              : !ignoreError
+              ? getValueFromObject(errors, name)?.message ??
+                otherProps.helperText
+              : undefined
+          }
           onChange={(v) => {
             onChange(v);
-            !!otherProps.onChange && otherProps.onChange(v);
+            if (!!otherProps.onChange) {
+              otherProps.onChange(v);
+            }
           }}
           onBlur={() => {
             onBlur();
-            !!otherProps.onBlur && otherProps.onBlur(value);
+            if (!!otherProps.onBlur) {
+              otherProps.onBlur(value);
+            }
           }}
         />
       )}

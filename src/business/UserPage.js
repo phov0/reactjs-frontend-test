@@ -1,14 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
-import {
-  actions as routeActions,
-  types as routes,
-} from "../reducers/routes.actions";
 
-import { Edit, DeleteOutline } from "@material-ui/icons";
 import { useForm } from "react-hook-form";
 import { actions } from "../reducers/user.actions";
-import { Button } from "@material-ui/core";
 import { ControlledTextField } from "../components/inputs";
+import { Button } from "@mui/material";
 
 const UserPage = () => {
   const dispatch = useDispatch();

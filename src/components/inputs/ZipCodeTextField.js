@@ -1,5 +1,5 @@
 import React from "react";
-import NumberFormat from "react-number-format";
+import { NumberFormatBase } from "react-number-format";
 import { removeNonDigitsFromString } from "../../utils/basic";
 
 const formatZipCode = (value) => {
@@ -12,17 +12,21 @@ const formatZipCode = (value) => {
 	return finalValue;
 };
 
-const ZipCodeTextField = ({ inputRef, onChange, ...other }) => {
+const ZipCodeTextField = React.forwardRef(({ onChange, ...other }, ref) => {
 	return (
-		<NumberFormat
+		<NumberFormatBase
 			{...other}
-			getInputRef={inputRef}
+			getInputRef={ref}
 			onValueChange={(values) => {
-				onChange(values.formattedValue);
+				onChange({
+					target: {
+						value: values.formattedValue,
+					},
+				});
 			}}
 			format={formatZipCode}
 		/>
 	);
-};
+});
 
 export default ZipCodeTextField;

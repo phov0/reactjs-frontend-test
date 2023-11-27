@@ -3,8 +3,7 @@ import {
   actions as routeActions,
   types as routes,
 } from "../reducers/routes.actions";
-
-import { Edit, DeleteOutline } from "@material-ui/icons";
+import { DeleteOutline, Edit } from "@mui/icons-material";
 
 const HomePage = () => {
   const dispatch = useDispatch();
