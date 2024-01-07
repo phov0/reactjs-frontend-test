@@ -1,0 +1,34 @@
+body{
+    background-color: #f5f5f5;
+}
+
+.page-container{
+    padding: 1rem 1rem 1rem 1rem;
+    max-width: 60%;
+    margin:auto;
+}
+
+.form-inputs{
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    justify-content: space-evenly;
+
+}
+
+@media screen and (max-width: 1000px) {
+    .page-container{
+        max-width: 100%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .page-container{
+        max-width: 100%;
+    }
+
+    .form-inputs{
+        flex-direction: column;
+        gap: 1rem;
+    }
+}

@@ -7,6 +7,7 @@ import { types as routes } from "./reducers/routes.actions";
 const routePages = {
   [routes.HOME]: Pages.HomePage,
   [routes.USER]: Pages.UserPage,
+  [routes.NEW]: Pages.UserPage,
 
   [NOT_FOUND]: Pages.HomePage,
 };
@@ -14,6 +15,7 @@ const routePages = {
 const routePaths = {
   [routes.HOME]: "/",
   [routes.USER]: "/user/:id",
+  [routes.NEW]: "/new",
 };
 
 const { reducer, middleware, enhancer } = connectRoutes(routePaths, {

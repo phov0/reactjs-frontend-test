@@ -7,13 +7,23 @@ import {
 } from "../reducers/routes.actions";
 import { actions } from "../reducers/user.actions";
 import { request } from "../utils/api";
-import usersMock from "./users.mock";
+import {removeNonDigitsFromString} from "../utils/basic";
+import {actions as homeActions} from "../reducers/home.actions";
 
 function* userRouteWatcher() {
+
   yield routeWatcher(routes.USER, function* () {
     yield put(actions.loadUser.request());
   });
 }
+
+function* newRouteWatcher() {
+  yield routeWatcher(routes.NEW, function* () {
+    yield put(actions.clearState.request());
+  });
+}
+
+
 
 const loadUser = asyncFlow({
   actionGenerator: actions.loadUser,
@@ -23,10 +33,8 @@ const loadUser = asyncFlow({
   },
   api: (values) => {
     return request({
-      url: `/usuario/${values.id}`,
+      url: `http://localhost:8080/usuario/${values.id}`,
       method: "get",
-      isMock: true,
-      mockResult: usersMock.find((u) => u.id === values.id) ?? null,
     });
   },
   postSuccess: function* ({ response }) {
@@ -42,11 +50,9 @@ const saveUser = asyncFlow({
   },
   api: ({ id, ...values }) => {
     return request({
-      url: `/usuario/${id}`,
+      url: `http://localhost:8080/atualizar`,
       method: "put",
-      body: values,
-      isMock: true,
-      mockResult: {},
+      body: {id,...values},
     });
   },
   postSuccess: function* () {
@@ -54,8 +60,45 @@ const saveUser = asyncFlow({
   },
 });
 
+const deleteUser = asyncFlow({
+  actionGenerator: actions.deleteUser,
+  transform: function* () {
+    const id = yield select((state) => state.user.id);
+    return { id };
+  },
+  api: (values) => {
+    return request({
+      url: `http://localhost:8080/excluir/${values.id}`,
+      method: "delete",
+    });
+  },
+  postSuccess: function* ({ response }) {
+    yield put(homeActions.loadUsers.request());
+  },
+});
+
+const getAddress = asyncFlow({
+  actionGenerator: actions.getAddress,
+  transform: function* (payload) {
+    return { cep:removeNonDigitsFromString(payload) };
+  },
+  api: ({ cep }) => {
+    return request({
+      url: `https://viacep.com.br/ws/${cep}/json/`,
+      method: "get",
+    });
+  },
+  postSuccess: function* ({ response }) {
+    console.log({ address: response.data });
+
+  },
+});
+
 export const sagas = [
   userRouteWatcher(),
+    newRouteWatcher(),
   loadUser.watcher(),
   saveUser.watcher(),
+  deleteUser.watcher(),
+  getAddress.watcher()
 ];

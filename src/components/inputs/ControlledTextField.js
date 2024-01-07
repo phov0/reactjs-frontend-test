@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { Controller } from "react-hook-form";
 import { TextField } from "@mui/material";
 import { getValueFromObject } from "../../utils/basic";
@@ -14,11 +14,15 @@ const ControlledTextField = ({
     control,
     formState: { errors },
     rules,
+      register,
   } = formProps;
 
-  const isError =
+    const isError =
     (getValueFromObject(errors, name) !== undefined && !ignoreError) ||
     otherProps.error;
+
+    const [value,setValue]=useState("");
+
 
   return (
     <Controller

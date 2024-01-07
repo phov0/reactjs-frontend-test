@@ -14,6 +14,16 @@ const reducer = (state = initialState, action) => {
         ...initialState,
         id: action.payload.id,
       };
+    case actions.getAddress.REQUEST:
+      return{
+        ...state,
+        cep:action.payload
+      }
+    case actions.getAddress.SUCCESS:
+      return {
+        ...state,
+        address:action.payload.response.data
+      }
     case actions.loadUser.REQUEST:
     case actions.loadUser.SUCCESS:
     case actions.loadUser.FAILURE:
@@ -25,9 +35,23 @@ const reducer = (state = initialState, action) => {
             ? action.payload.response.data
             : null,
       };
+    case actions.deleteUser.REQUEST:
+      return{
+        ...state,
+        id:action.payload
+      }
+    case actions.deleteUser.SUCCESS:
+    case actions.deleteUser.FAILURE:
+    case actions.clearState.REQUEST:
+      return{
+        id:undefined
+      }
+    case actions.clearState.SUCCESS:
+    case actions.clearState.FAILURE:
     default:
       return state;
   }
+
 };
 
 export default reducer;
